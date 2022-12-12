@@ -7,7 +7,7 @@ public class Basket {
     private int[] arrPrice;
     private int[] arrKol;
 
-    static Basket loadFromTxtFile(String textFile) {
+    static Basket loadFromTxtFile(File textFile) {
         ArrayList<String> listStr = new ArrayList<>(3);
         Basket basket = null;
         try (BufferedReader reader = new BufferedReader(new FileReader(textFile))) {
@@ -15,14 +15,14 @@ public class Basket {
             while ((promVar = reader.readLine()) != null) {
                 listStr.add(promVar);
             }
-            String[] promArrName = listStr.get(0).split(",");//промежуточный массив строк наименований
-            String[] promArrKol = listStr.get(1).split(",");//промежуточный массив строк количества
+            String[] promArrName = listStr.get(0).split(",");//промежуточный массив String наименований
+            String[] promArrKol = listStr.get(1).split(",");//промежуточный массив String количества
             int[] arrKol = new int[promArrKol.length];//интовый массив цен
             //перегонка стрингов в инты
             for (int i = 0; i < promArrKol.length; i++) {
                 arrKol[i] = Integer.parseInt(promArrKol[i]);
             }
-            String[] promArrPrice= listStr.get(2).split(",");//промежуточный массив строк цен
+            String[] promArrPrice= listStr.get(2).split(",");//промежуточный массив String цен
             int[] arrPrice = new int[promArrPrice.length];//интовый массив кол-ва
             //перегонка стрингов в инты
             for (int i = 0; i < promArrPrice.length; i++) {
@@ -30,9 +30,6 @@ public class Basket {
             }
             basket = new Basket(promArrName, arrPrice);
             basket.arrKol=arrKol;
-            //System.out.println(Arrays.toString(promArrName) + "\n" +
-                    //Arrays.toString(arrKol) + "\n" +
-                    //Arrays.toString(arrPrice) + "\n");
         } catch (IOException exception) {
             System.out.println(exception.getMessage());
         }

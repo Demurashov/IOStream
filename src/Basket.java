@@ -18,7 +18,7 @@ public class Basket implements Serializable {
         return basket;
     }
 
-    static Basket loadFromTxtFile(String textFile) {
+    static Basket loadFromTxtFile(File textFile) {
         ArrayList<String> listStr = new ArrayList<>(3);
         Basket basket = null;
         try (BufferedReader reader = new BufferedReader(new FileReader(textFile))) {

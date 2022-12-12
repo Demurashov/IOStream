@@ -7,7 +7,7 @@ public class Basket {
     private int[] arrPrice;
     private int[] arrKol;
 
-    static Basket loadFromTxtFile(File textFile) {
+    static Basket loadFromTxtFile(String textFile) {
         ArrayList<String> listStr = new ArrayList<>(3);
         Basket basket = null;
         try (BufferedReader reader = new BufferedReader(new FileReader(textFile))) {
@@ -15,24 +15,24 @@ public class Basket {
             while ((promVar = reader.readLine()) != null) {
                 listStr.add(promVar);
             }
-
             String[] promArrName = listStr.get(0).split(",");//промежуточный массив строк наименований
-            String[] promArrPrice = listStr.get(1).split(",");//промежуточный массив строк цен
-            int[] arrPrice = new int[promArrPrice.length];//интовый массив цен
-            //перегонка стрингов в инты
-            for (int i = 0; i < promArrPrice.length; i++) {
-                arrPrice[i] = Integer.parseInt(promArrPrice[i]);
-            }
-            String[] promArrKol = listStr.get(2).split(",");//промежуточный массив строк цен
-            int[] arrKol = new int[promArrKol.length];//интовый массив кол-ва
+            String[] promArrKol = listStr.get(1).split(",");//промежуточный массив строк количества
+            int[] arrKol = new int[promArrKol.length];//интовый массив цен
             //перегонка стрингов в инты
             for (int i = 0; i < promArrKol.length; i++) {
                 arrKol[i] = Integer.parseInt(promArrKol[i]);
             }
+            String[] promArrPrice= listStr.get(2).split(",");//промежуточный массив строк цен
+            int[] arrPrice = new int[promArrPrice.length];//интовый массив кол-ва
+            //перегонка стрингов в инты
+            for (int i = 0; i < promArrPrice.length; i++) {
+                arrPrice[i] = Integer.parseInt(promArrPrice[i]);
+            }
             basket = new Basket(promArrName, arrPrice);
-            System.out.println(Arrays.toString(promArrName) + "\n" +
-                    Arrays.toString(arrPrice) + "\n" +
-                    Arrays.toString(arrKol) + "\n");
+            basket.arrKol=arrKol;
+            //System.out.println(Arrays.toString(promArrName) + "\n" +
+                    //Arrays.toString(arrKol) + "\n" +
+                    //Arrays.toString(arrPrice) + "\n");
         } catch (IOException exception) {
             System.out.println(exception.getMessage());
         }

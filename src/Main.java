@@ -7,31 +7,32 @@ public class Main {
     private static int arrPrice[] = {100, 50, 20, 10, 70};//массив цен
 
     //private static Scanner sc=new Scanner(System.in);
-
+    public static Basket basket;
+    public static File fileBasket = new File("basket.txt");
 
     public static void main(String args[]) {
 
-        File fileBasket = new File("basket.txt");
         //System.out.println(fileBasket.exists());
         if (fileBasket.exists()) {
-            Basket basket = Basket.loadFromTxtFile(fileBasket);
             System.out.println("Обнаружена ранее сформированная корзина:");
+            basket = Basket.loadFromTxtFile("basket.txt");
+            //System.out.println(basket.toString());
             basket.printCart();
-        } else {
-            Basket basket=new Basket(arrName,arrPrice);
-            System.out.println("------------Меню----------");
-            for (int i = 0; i < arrName.length; i++) {
-                System.out.println("|N товара: " + (i + 1) + "| Товар: " + arrName[i] + "| Цена: " + arrPrice[i] + "|");
-            }
-            while (input("Для заказа введите номер товара и количество через пробел:", basket)) {
+            System.out.println("Редактировать -Y. Использовать загруженную из файла - любой символ");
+            String promVar=sc.nextLine();
+            if (promVar.equals("Y") || promVar.equals("y")) {
+                menu();
+            }else {
+                System.out.println("Ваша корзина:");
                 basket.printCart();
-                basket.saveTxt(fileBasket);
+                //System.out.println(basket.toString());
             }
-            System.out.println(("Работа программы завершена"));
+        } else {
+            menu();
             //System.out.println(basket.toString());
         }
+        System.out.println(("Работа программы завершена"));
     }
-
     //метод ввода и проверки пользовательских  данных
     public static boolean input(String str, Basket basket) {
         System.out.println(str);
@@ -63,4 +64,17 @@ public class Main {
         return true;
     }
 
+    //вывод меню
+    public static void menu() {
+        System.out.println("------------Меню----------");
+        for (int i = 0; i < arrName.length; i++) {
+            System.out.println("|N товара: " + (i + 1) + "| Товар: " + arrName[i] + "| Цена: " + arrPrice[i] + "|");
+            basket = new Basket(arrName, arrPrice);
+        }
+        while (input("Для заказа введите номер товара и количество через пробел:", basket)) {
+            basket.printCart();
+            basket.saveTxt(fileBasket);
+        }
+
+    }
 }

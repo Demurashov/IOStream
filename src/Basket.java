@@ -2,10 +2,21 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Basket {
+public class Basket implements Serializable {
     private String[] arrName;
     private int[] arrPrice;
     private int[] arrKol;
+
+    static Basket loadFromBinFile(File file) {
+        Basket basket = null;
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            basket = (Basket) objectInputStream.readObject();
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
+        }
+        return basket;
+    }
 
     static Basket loadFromTxtFile(String textFile) {
         ArrayList<String> listStr = new ArrayList<>(3);
@@ -15,24 +26,21 @@ public class Basket {
             while ((promVar = reader.readLine()) != null) {
                 listStr.add(promVar);
             }
-            String[] promArrName = listStr.get(0).split(",");//промежуточный массив строк наименований
-            String[] promArrKol = listStr.get(1).split(",");//промежуточный массив строк количества
+            String[] promArrName = listStr.get(0).split(",");//массив String наименований
+            String[] promArrKol = listStr.get(1).split(",");// промежуточный массив String количества
             int[] arrKol = new int[promArrKol.length];//интовый массив цен
             //перегонка стрингов в инты
             for (int i = 0; i < promArrKol.length; i++) {
                 arrKol[i] = Integer.parseInt(promArrKol[i]);
             }
-            String[] promArrPrice= listStr.get(2).split(",");//промежуточный массив строк цен
+            String[] promArrPrice = listStr.get(2).split(",");//промежуточный массив String  цен
             int[] arrPrice = new int[promArrPrice.length];//интовый массив кол-ва
             //перегонка стрингов в инты
             for (int i = 0; i < promArrPrice.length; i++) {
                 arrPrice[i] = Integer.parseInt(promArrPrice[i]);
             }
             basket = new Basket(promArrName, arrPrice);
-            basket.arrKol=arrKol;
-            //System.out.println(Arrays.toString(promArrName) + "\n" +
-                    //Arrays.toString(arrKol) + "\n" +
-                    //Arrays.toString(arrPrice) + "\n");
+            basket.arrKol = arrKol;
         } catch (IOException exception) {
             System.out.println(exception.getMessage());
         }
@@ -47,7 +55,7 @@ public class Basket {
     }
 
     public void addToCart(int productNum, int amount) {
-        arrKol[productNum] += amount;//ввод количества товаров в массив количества
+        arrKol[productNum] += amount;//добавление количества товаров в массив количества
 
     }
 
@@ -89,6 +97,17 @@ public class Basket {
             writer.write(toString());
             writer.flush();
         } catch (IOException exception) {
+            System.out.println(exception.getMessage());
+        }
+    }
+
+    public void saveBin(File file) {
+        Basket basket = new Basket(arrName, arrPrice);
+        basket.arrKol=arrKol;
+        try (FileOutputStream fileOutStr = new FileOutputStream(file);
+             ObjectOutputStream objOutStr = new ObjectOutputStream(fileOutStr)) {
+            objOutStr.writeObject(basket);
+        } catch (Exception exception) {
             System.out.println(exception.getMessage());
         }
     }

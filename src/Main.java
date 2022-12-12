@@ -5,18 +5,15 @@ public class Main {
     static Scanner sc = new Scanner(System.in);
     private static String arrName[] = {"Кура", "Яйцо", "Молоко", "Хлеб", "Рыба"};//массив названий
     private static int arrPrice[] = {100, 50, 20, 10, 70};//массив цен
-
-    //private static Scanner sc=new Scanner(System.in);
     public static Basket basket;
-    public static File fileBasket = new File("basket.txt");
+    public static File fileBasket = new File("basket.bin");
 
     public static void main(String args[]) {
 
-        //System.out.println(fileBasket.exists());
+        //проверка на наличие файла и выбор действий в зависимости от этого
         if (fileBasket.exists()) {
             System.out.println("Обнаружена ранее сформированная корзина:");
-            basket = Basket.loadFromTxtFile("basket.txt");
-            //System.out.println(basket.toString());
+            basket = Basket.loadFromBinFile(fileBasket);
             basket.printCart();
             System.out.println("Редактировать -Y. Использовать загруженную из файла - любой символ");
             String promVar=sc.nextLine();
@@ -25,11 +22,9 @@ public class Main {
             }else {
                 System.out.println("Ваша корзина:");
                 basket.printCart();
-                //System.out.println(basket.toString());
             }
         } else {
             menu();
-            //System.out.println(basket.toString());
         }
         System.out.println(("Работа программы завершена"));
     }
@@ -63,17 +58,16 @@ public class Main {
         }
         return true;
     }
-
     //вывод меню
     public static void menu() {
+        basket = new Basket(arrName, arrPrice);
         System.out.println("------------Меню----------");
         for (int i = 0; i < arrName.length; i++) {
             System.out.println("|N товара: " + (i + 1) + "| Товар: " + arrName[i] + "| Цена: " + arrPrice[i] + "|");
-            basket = new Basket(arrName, arrPrice);
         }
         while (input("Для заказа введите номер товара и количество через пробел:", basket)) {
             basket.printCart();
-            basket.saveTxt(fileBasket);
+            basket.saveBin(fileBasket);
         }
 
     }

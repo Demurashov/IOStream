@@ -1,4 +1,10 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.*;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -17,7 +23,17 @@ public class Basket implements Serializable {
         }
         return basket;
     }
-
+    static Basket loadFromJsonFile(File file) {
+        Basket basket = null;
+        GsonBuilder builder=new GsonBuilder();
+        Gson gsonBasket=builder.create();
+        try {
+            basket=gsonBasket.fromJson(new FileReader(file),Basket.class);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+        return basket;
+    }
     static Basket loadFromTxtFile(File textFile) {
         ArrayList<String> listStr = new ArrayList<>(3);
         Basket basket = null;
@@ -111,6 +127,17 @@ public class Basket implements Serializable {
             System.out.println(exception.getMessage());
         }
     }
-
+    public void saveJson(File file) {
+        Basket basket = new Basket(arrName, arrPrice);
+        basket.arrKol=arrKol;
+        GsonBuilder builder=new GsonBuilder();
+        Gson gsonBasket=builder.create();
+        //gsonBasket.toJson(basket);
+        try (FileWriter jsFile=new FileWriter(file)) {
+            jsFile.write(gsonBasket.toJson(basket));
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
 }
 

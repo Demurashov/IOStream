@@ -6,19 +6,21 @@ public class Main {
     private static String arrName[] = {"Кура", "Яйцо", "Молоко", "Хлеб", "Рыба"};//массив названий
     private static int arrPrice[] = {100, 50, 20, 10, 70};//массив цен
     public static Basket basket;
-    public static File fileBasket = new File("basket.bin");
     public static ClientLog cl=new ClientLog();
+    public static SettingsManager sm=new SettingsManager("shop.xml");
     public static void main(String args[]) {
 
         //проверка на наличие файла и выбор действий в зависимости от этого
-        if (fileBasket.exists()) {
+        if (sm.getLoadFileName().exists()&&sm.loadBySettings()!=null) {
             System.out.println("Обнаружена ранее сформированная корзина:");
-            basket = Basket.loadFromBinFile(fileBasket);
+            //basket = Basket.loadFromBinFile(fileBasket);
+            basket=sm.loadBySettings();
             basket.printCart();
             System.out.println("Редактировать -Y. Использовать загруженную из файла - любой символ");
             String promVar=sc.nextLine();
             if (promVar.equals("Y") || promVar.equals("y")) {
                 menu();
+
             }else {
                 System.out.println("Ваша корзина:");
                 basket.printCart();
@@ -26,7 +28,7 @@ public class Main {
         } else {
             menu();
         }
-
+        sm.saveLogBySettings(cl);
         System.out.println("Логи: "+cl.print());
         System.out.println(("Работа программы завершена"));
     }
@@ -70,7 +72,9 @@ public class Main {
         }
         while (input("Для заказа введите номер товара и количество через пробел:", basket)) {
             basket.printCart();
-            basket.saveBin(fileBasket);
+            //basket.saveBin(fileBasket);
+            //basket.saveJson(fileBasket);
+            sm.saveBySettings(basket);
         }
 
     }
